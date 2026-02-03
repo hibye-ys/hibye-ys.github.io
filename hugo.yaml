@@ -100,7 +100,7 @@ menus:
   # footer social link
   social:
     - name: GitHub
-      url: https://github.com/username
+      url: https://github.com/hibye-ys
       weight: 10
       params:
         icon: github
@@ -115,7 +115,7 @@ menus:
       params:
         icon: linkedin
     - name: Email
-      url: mailto:your.email@example.com
+      url: mailto:heunwhite@gmail.com
       weight: 40
       params:
         icon: email
@@ -137,19 +137,19 @@ params:
     svg: "/favicon.svg" # SVG format favicon (recommended)
 
   author:
-    name: "Hugo Narrow"
-    title: "A Clean and Minimal Hugo Theme"
-    description: "Focused on content and user experience."
+    name: "HiBye's Blog"
+    title: "다양한 경험하기"
+    description: ""
     avatar: "/images/avatar.svg"
     social:
       - name: "GitHub"
-        url: "https://github.com/username"
+        url: "https://github.com/hibye-ys"
         icon: "github"
-      - name: "Twitter"
+      - name: "X"
         url: "https://twitter.com/username"
         icon: "twitter"
       - name: "Email"
-        url: "mailto:hello@example.com"
+        url: "mailto:heunwhite@gmail.com"
         icon: "email"
 
   # UI Components Control
