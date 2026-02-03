@@ -1,8 +1,0 @@
-baseURL = 'https://hibye-ys.github.io/'
-languageCode = 'ko-KR'
-title = 'My New Hugo Site'
-theme = "hugo-narrow"
-
-[caches]
-  [caches.images]
-    dir = ':cacheDir/images'
