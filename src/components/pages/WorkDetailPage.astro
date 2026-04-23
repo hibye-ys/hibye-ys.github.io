@@ -1,0 +1,54 @@
+---
+import Base from '../../layouts/Base.astro';
+import { render } from 'astro:content';
+import type { ProjectEntry } from '../../lib/content';
+import { SITE, localizedPath, type Lang } from '../../lib/site';
+
+export interface Props {
+  project: ProjectEntry;
+  lang?: Lang;
+}
+
+const { project, lang = 'ko' } = Astro.props;
+const { Content } = await render(project);
+const { links, stack } = project.data;
+---
+<Base title={`${project.data.title} · ${SITE.name}`} description={project.data.description} active="Works" lang={lang}>
+  <section class="section" style="padding-top:48px">
+    <div class="container">
+      <div class="eyebrow" style="font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase">
+        PROJECT · {project.data.year} · {project.data.tag.toUpperCase()}
+      </div>
+      <h1 style="font-family:var(--display);font-weight:400;font-size:72px;line-height:1;letter-spacing:-.02em;margin:8px 0 12px">
+        {project.data.title}
+      </h1>
+      <p style="font-family:var(--serif-reader);font-size:20px;color:var(--ink-2);max-width:640px;margin:0">
+        {project.data.description}
+      </p>
+
+      {project.data.cover && (
+        <div style="aspect-ratio:16/9;border-radius:12px;border:1px solid var(--rule);overflow:hidden;margin:36px 0">
+          <img src={project.data.cover} alt="" style="width:100%;height:100%;object-fit:cover"/>
+        </div>
+      )}
+
+      <div style="display:grid;grid-template-columns:1fr 220px;gap:48px;margin-top:36px">
+        <div class="article"><div class="body" style="font-size:17px"><Content /></div></div>
+        <aside style="font-family:var(--sans);font-size:13px">
+          <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">LINKS</div>
+          <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:20px">
+            {links.live && <a href={links.live} style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-soft)">→ live</a>}
+            {links.github && <a href={links.github} style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-soft)">→ github</a>}
+            {links.post && <a href={localizedPath(`/posts/${links.post}`, lang)} style="color:var(--accent);text-decoration:none;border-bottom:1px solid var(--accent-soft)">→ post</a>}
+          </div>
+          {stack.length > 0 && <>
+            <div style="font-family:var(--mono);font-size:11px;color:var(--ink-3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">STACK</div>
+            <div class="row-flex" style="gap:6px">
+              {stack.map((item) => <span class="tagchip">{item}</span>)}
+            </div>
+          </>}
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>

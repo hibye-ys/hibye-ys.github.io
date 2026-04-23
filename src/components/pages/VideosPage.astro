@@ -1,0 +1,68 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { getPosts } from '../../lib/content';
+import { SITE, baseSlug, formatDate, localizedPath, type Lang } from '../../lib/site';
+
+export interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'ko' } = Astro.props;
+const posts = await getPosts(lang);
+const mine = posts.filter((post): post is CollectionEntry<'scripts'> => post.collection === 'scripts');
+const notes = posts.filter((post): post is CollectionEntry<'video-notes'> => post.collection === 'video-notes');
+---
+<Base title={`Videos · ${SITE.name}`} active="Posts" lang={lang}>
+  <section class="section" style="padding-top:48px">
+    <div class="container" style="max-width:900px">
+      <div class="sub" style="margin-bottom:6px">VIDEO SCRIPTS</div>
+      <h2 style="font-family:var(--display);font-style:italic;font-weight:400;font-size:56px;line-height:1;margin:0 0 8px">
+        Watched & written.
+      </h2>
+      <p style="font-family:var(--serif-reader);font-size:17px;color:var(--ink-3);margin:0 0 32px;max-width:560px">
+        내가 만든 영상의 스크립트와, 다른 사람 영상·팟캐스트를 보고 정리한 노트.
+      </p>
+
+      <div class="vid-tabs" id="vid-tabs">
+        <div class="tab active" data-tab="mine">My videos <span style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-left:4px">{mine.length}</span></div>
+        <div class="tab" data-tab="notes">Notes on others <span style="font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-left:4px">{notes.length}</span></div>
+      </div>
+
+      <div id="vid-mine">
+        {mine.map((video) => (
+          <a href={localizedPath(`/posts/${baseSlug(video.id)}`, lang)} class="vid-item">
+            <div class="vthumb"><div class="play">▶</div></div>
+            <div>
+              <h4>{video.data.title}</h4>
+              {video.data.excerpt && <p>{video.data.excerpt}</p>}
+              <div class="vmeta">{formatDate(video.data.date, lang)} · {video.data.duration}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div id="vid-notes" style="display:none">
+        {notes.map((video) => (
+          <a href={localizedPath(`/posts/${baseSlug(video.id)}`, lang)} class="vid-item">
+            <div class="vthumb"><div class="play">▶</div></div>
+            <div>
+              <h4>{video.data.title}</h4>
+              {video.data.excerpt && <p>{video.data.excerpt}</p>}
+              <div class="vmeta">{formatDate(video.data.date, lang)} · {video.data.source_name}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+<script>
+  const tabs = document.querySelectorAll('#vid-tabs .tab');
+  tabs.forEach((tab) => tab.addEventListener('click', () => {
+    tabs.forEach((item) => item.classList.remove('active'));
+    tab.classList.add('active');
+    const key = tab.getAttribute('data-tab');
+    (document.getElementById('vid-mine') as HTMLElement).style.display = key === 'mine' ? '' : 'none';
+    (document.getElementById('vid-notes') as HTMLElement).style.display = key === 'notes' ? '' : 'none';
+  }));
+</script>

@@ -1,0 +1,20 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { baseSlug, formatDate, localizedPath, type Lang } from '../lib/site';
+export interface Props {
+  post: CollectionEntry<'thoughts'> | CollectionEntry<'notes'> | CollectionEntry<'video-notes'> | CollectionEntry<'scripts'>;
+  lang?: Lang;
+}
+const { post, lang = 'ko' } = Astro.props;
+const cat = post.collection;
+const date = formatDate(post.data.date, lang);
+const href = localizedPath(`/posts/${baseSlug(post.id)}`, lang);
+---
+<a href={href} class="post-row">
+  <div class="row-meta">
+    <span class="cat">#{cat}</span>
+    <span>{date}</span>
+  </div>
+  <h3>{post.data.title}</h3>
+  {post.data.excerpt && <p>{post.data.excerpt}</p>}
+</a>

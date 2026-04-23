@@ -1,0 +1,33 @@
+---
+import { SITE, localizedPath, switchLocalePath, type Lang } from '../lib/site';
+
+export interface Props {
+  active?: 'About' | 'Posts' | 'Works';
+  lang?: Lang;
+}
+
+const { active = 'About', lang = 'ko' } = Astro.props;
+const items: Array<'About' | 'Posts' | 'Works'> = ['About', 'Posts', 'Works'];
+const pathFor = (item: string) => item === 'About' ? '/about' : item === 'Posts' ? '/posts' : '/works';
+const hrefFor = (item: string) => localizedPath(pathFor(item), lang);
+const homeHref = localizedPath('/', lang);
+const koHref = switchLocalePath(Astro.url.pathname, 'ko');
+const enHref = switchLocalePath(Astro.url.pathname, 'en');
+---
+<header class="container">
+  <nav class="nav">
+    <a href={homeHref} class="brand" style="text-decoration:none">{SITE.name}<em>.</em></a>
+    <div style="display:flex;gap:24px;align-items:center">
+      <ul>
+        {items.map((item) => (
+          <li><a href={hrefFor(item)} class={active === item ? 'active' : ''}>{item}</a></li>
+        ))}
+      </ul>
+      <div class="lang" aria-label="Language switcher">
+        <a href={koHref} class={lang === 'ko' ? 'active-lang' : ''}>KO</a>
+        <span>/</span>
+        <a href={enHref} class={lang === 'en' ? 'active-lang' : ''}>EN</a>
+      </div>
+    </div>
+  </nav>
+</header>

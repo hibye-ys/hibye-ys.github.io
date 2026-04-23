@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import { render } from 'astro:content';
+import type { PostEntry } from '../../lib/content';
+import { SITE, formatDate, type Lang } from '../../lib/site';
+
+export interface Props {
+  post: PostEntry;
+  lang?: Lang;
+}
+
+const { post, lang = 'ko' } = Astro.props;
+const { Content } = await render(post);
+const date = formatDate(post.data.date, lang);
+const tagStr = post.data.tags.map((tag) => `#${tag}`).join(' · ');
+---
+<Base title={`${post.data.title} · ${SITE.name}`} description={post.data.excerpt} active="Posts" lang={lang}>
+  <article class="section article" style="padding-top:56px">
+    <div class="container" style="max-width:760px">
+      <div class="eyebrow">{post.collection.toUpperCase()}{tagStr && ` · ${tagStr}`}</div>
+      <h1>{post.data.title}</h1>
+      <div class="byline">{date} · by {SITE.author}</div>
+      <div class="body">
+        <Content />
+      </div>
+    </div>
+  </article>
+</Base>

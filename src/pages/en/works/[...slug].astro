@@ -1,0 +1,11 @@
+---
+import WorkDetailPage from '../../../components/pages/WorkDetailPage.astro';
+import { getProjectPaths, type ProjectEntry } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  return getProjectPaths('en');
+}
+
+const { project } = Astro.props as { project: ProjectEntry };
+---
+<WorkDetailPage project={project} lang="en" />

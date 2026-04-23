@@ -1,0 +1,50 @@
+---
+// Base layout — nav, footer, fonts, OS-aware dark mode.
+import Nav from '../components/Nav.astro';
+import { SITE, type Lang } from '../lib/site';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description?: string;
+  lang?: Lang;
+  active?: 'About' | 'Posts' | 'Works';
+}
+const { title, description = SITE.description, lang = 'ko', active = 'About' } = Astro.props;
+const displayTitle = title === SITE.name ? SITE.name : title;
+---
+<!doctype html>
+<html lang={lang} class="theme-auto">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{displayTitle}</title>
+    <link rel="alternate" type="application/rss+xml" title={SITE.name} href="/rss.xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script is:inline>
+      // OS-aware dark mode — before paint to avoid flash
+      (function () {
+        const mql = window.matchMedia('(prefers-color-scheme: dark)');
+        const sync = () => {
+          const auto = document.documentElement.classList.contains('theme-auto');
+          document.documentElement.classList.toggle('is-dark', auto && mql.matches);
+        };
+        sync();
+        mql.addEventListener && mql.addEventListener('change', sync);
+      })();
+    </script>
+  </head>
+  <body>
+    <Nav active={active} lang={lang} />
+    <slot />
+    <footer class="container">
+      <div>© 2026 {SITE.author} · built with astro · hosted on github pages</div>
+      <div class="row-flex">
+        <a href="/rss.xml">RSS</a>
+        <a href="/sitemap-index.xml">sitemap</a>
+      </div>
+    </footer>
+  </body>
+</html>

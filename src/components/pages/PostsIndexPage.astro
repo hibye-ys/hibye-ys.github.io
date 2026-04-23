@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostRow from '../PostRow.astro';
+import { getPosts } from '../../lib/content';
+import { SITE, localizedPath, type Lang } from '../../lib/site';
+
+export interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'ko' } = Astro.props;
+const url = new URL(Astro.request.url);
+const cat = url.searchParams.get('cat') || 'all';
+const all = await getPosts(lang);
+const filtered = cat === 'all' ? all : all.filter((post) => post.collection === cat);
+
+const counts = {
+  all: all.length,
+  thoughts: all.filter((post) => post.collection === 'thoughts').length,
+  notes: all.filter((post) => post.collection === 'notes').length,
+  scripts: all.filter((post) => post.collection === 'scripts').length,
+  'video-notes': all.filter((post) => post.collection === 'video-notes').length,
+};
+const cats = [
+  { k: 'all', label: 'all' },
+  { k: 'thoughts', label: '#thoughts' },
+  { k: 'notes', label: '#notes' },
+  { k: 'scripts', label: '#scripts' },
+  { k: 'video-notes', label: '#video-notes' },
+];
+---
+<Base title={`Posts · ${SITE.name}`} active="Posts" lang={lang}>
+  <section class="section" style="padding-top:48px">
+    <div class="container">
+      <div style="display:grid;grid-template-columns:200px 1fr;gap:48px">
+        <aside>
+          <div class="sub" style="margin-bottom:12px">CATEGORY</div>
+          <ul style="list-style:none;margin:0;padding:0;font-family:var(--sans);font-size:14px">
+            {cats.map((item) => (
+              <li style={`padding:6px 10px;margin:0 -10px;border-radius:6px;display:flex;justify-content:space-between;background:${item.k===cat?'var(--accent-soft)':'transparent'};color:${item.k===cat?'var(--accent-2)':'var(--ink-2)'};font-weight:${item.k===cat?600:500}`}>
+                <a href={item.k === 'all' ? localizedPath('/posts', lang) : `${localizedPath('/posts', lang)}?cat=${item.k}`} style="text-decoration:none;color:inherit;display:flex;justify-content:space-between;width:100%">
+                  <span>{item.label}</span>
+                  <span style="font-family:var(--mono);font-size:11px;color:var(--ink-3)">{counts[item.k as keyof typeof counts]}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </aside>
+        <div>
+          <div class="sub" style="margin-bottom:6px">{cat.toUpperCase()} · {filtered.length} posts</div>
+          <h2 style="font-family:var(--display);font-style:italic;font-weight:400;font-size:56px;line-height:1;margin:0 0 24px">
+            {cat === 'all' ? 'All posts' : cat}.
+          </h2>
+          {filtered.map((post) => <PostRow post={post} lang={lang} />)}
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
