@@ -44,8 +44,7 @@
   --accent-2: #163321;
   --accent-soft: #d9e8de;
 }
-:root.theme-dark,
-:root.theme-auto.is-dark {
+:root.theme-dark {
   --bg: #14120f;
   --bg-2: #1f1c17;
   --surface: #1b1814;
@@ -87,6 +86,11 @@ a { color: inherit; }
   display: flex; align-items: baseline; justify-content: space-between;
   padding: 28px 0 24px;
 }
+.nav-actions {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
 .nav .brand {
   font-family: var(--display);
   font-size: 22px;
@@ -114,7 +118,8 @@ a { color: inherit; }
   height: 2px; background: var(--accent);
   border-radius: 2px;
 }
-.lang {
+.lang,
+.theme-toggle {
   font-family: var(--mono);
   font-size: 11px;
   color: var(--ink-3);
@@ -124,6 +129,26 @@ a { color: inherit; }
   padding: 4px 8px;
   border-radius: 999px;
   background: var(--surface);
+}
+.theme-toggle {
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+}
+.theme-toggle:hover {
+  color: var(--ink);
+}
+.theme-toggle .theme-light {
+  color: var(--ink);
+  font-weight: 500;
+}
+:root.theme-dark .theme-toggle .theme-light {
+  color: var(--ink-3);
+  font-weight: 400;
+}
+:root.theme-dark .theme-toggle .theme-dark-label {
+  color: var(--ink);
+  font-weight: 500;
 }
 .lang a {
   text-decoration: none;
@@ -544,6 +569,7 @@ footer a:hover { color: var(--accent); border-color: var(--accent); }
 @media (max-width: 840px) {
   :root { --gutter: 20px; }
   .nav { padding: 18px 0 16px; flex-wrap: wrap; gap: 10px; }
+  .nav-actions { gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
   .nav ul { gap: 18px; font-size: 13px; }
   .hero { padding: 28px 0 36px; }
   .hero h1 { font-size: clamp(38px, 9vw, 56px) !important; }

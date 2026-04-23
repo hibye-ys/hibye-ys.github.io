@@ -1,5 +1,5 @@
 ---
-// Base layout — nav, footer, fonts, OS-aware dark mode.
+// Base layout — nav, footer, fonts, persisted theme.
 import Nav from '../components/Nav.astro';
 import { SITE, type Lang } from '../lib/site';
 import '../styles/global.css';
@@ -14,7 +14,7 @@ const { title, description = SITE.description, lang = 'ko', active = 'About' } =
 const displayTitle = title === SITE.name ? SITE.name : title;
 ---
 <!doctype html>
-<html lang={lang} class="theme-auto">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -24,15 +24,10 @@ const displayTitle = title === SITE.name ? SITE.name : title;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <script is:inline>
-      // OS-aware dark mode — before paint to avoid flash
       (function () {
-        const mql = window.matchMedia('(prefers-color-scheme: dark)');
-        const sync = () => {
-          const auto = document.documentElement.classList.contains('theme-auto');
-          document.documentElement.classList.toggle('is-dark', auto && mql.matches);
-        };
-        sync();
-        mql.addEventListener && mql.addEventListener('change', sync);
+        const theme = localStorage.getItem('theme') === 'dark' ? 'dark' : 'light';
+        document.documentElement.classList.toggle('theme-dark', theme === 'dark');
+        document.documentElement.dataset.theme = theme;
       })();
     </script>
   </head>

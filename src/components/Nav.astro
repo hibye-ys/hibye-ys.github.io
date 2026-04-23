@@ -17,12 +17,17 @@ const enHref = switchLocalePath(Astro.url.pathname, 'en');
 <header class="container">
   <nav class="nav">
     <a href={homeHref} class="brand" style="text-decoration:none">{SITE.name}<em>.</em></a>
-    <div style="display:flex;gap:24px;align-items:center">
+    <div class="nav-actions">
       <ul>
         {items.map((item) => (
           <li><a href={hrefFor(item)} class={active === item ? 'active' : ''}>{item}</a></li>
         ))}
       </ul>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle color theme">
+        <span class="theme-light">Light</span>
+        <span>/</span>
+        <span class="theme-dark-label">Dark</span>
+      </button>
       <div class="lang" aria-label="Language switcher">
         <a href={koHref} class={lang === 'ko' ? 'active-lang' : ''}>KO</a>
         <span>/</span>
@@ -31,3 +36,17 @@ const enHref = switchLocalePath(Astro.url.pathname, 'en');
     </div>
   </nav>
 </header>
+<script>
+  const root = document.documentElement;
+  const themeToggle = document.getElementById('theme-toggle');
+
+  function applyTheme(theme: 'light' | 'dark') {
+    root.classList.toggle('theme-dark', theme === 'dark');
+    root.dataset.theme = theme;
+    localStorage.setItem('theme', theme);
+  }
+
+  themeToggle?.addEventListener('click', () => {
+    applyTheme(root.dataset.theme === 'dark' ? 'light' : 'dark');
+  });
+</script>
