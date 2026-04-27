@@ -1,0 +1,35 @@
+---
+import { baseSlug, localizedPath, type Lang } from '../lib/site';
+import type { HarnessEntry } from '../lib/content';
+
+export interface Props {
+  entry: HarnessEntry;
+  lang?: Lang;
+}
+
+const { entry, lang = 'ko' } = Astro.props;
+const href = localizedPath(`/harness/${baseSlug(entry.id)}`, lang);
+const { title, description, category, tags, cover } = entry.data;
+const tagsAttr = tags.join(',');
+---
+<a
+  href={href}
+  class="harness-card"
+  data-cat={category}
+  data-tags={tagsAttr}
+>
+  <div class="cover">
+    {cover
+      ? <img src={cover} alt="" />
+      : <span class="cover-fallback">{title}</span>
+    }
+    <span class="cat-badge">{category}</span>
+  </div>
+  <h4>{title}</h4>
+  <p class="desc">{description}</p>
+  {tags.length > 0 && (
+    <div class="tag-row">
+      {tags.map((tag) => <span class="t">{tag}</span>)}
+    </div>
+  )}
+</a>

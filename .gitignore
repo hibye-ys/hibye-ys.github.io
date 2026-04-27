@@ -8,3 +8,7 @@ public/
 resources/
 .claude
 .vscode
+CLAUDE.md
+AGENTS.md
+_docs
+docs/

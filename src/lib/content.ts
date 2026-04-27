@@ -11,6 +11,8 @@ export type PostEntry =
 
 export type ProjectEntry = CollectionEntry<'projects'>;
 
+export type HarnessEntry = CollectionEntry<'harness'>;
+
 const POST_COLLECTIONS = ['thoughts', 'notes', 'video-notes', 'scripts'] as const;
 const CONTENT_ROOT = join(process.cwd(), 'src/content');
 
@@ -44,7 +46,7 @@ function languageScore(entryLang: Lang, targetLang: Lang) {
   return 0;
 }
 
-function pickLocalized<T extends PostEntry | ProjectEntry>(entries: T[], lang: Lang) {
+function pickLocalized<T extends PostEntry | ProjectEntry | HarnessEntry>(entries: T[], lang: Lang) {
   const bySlug = new Map<string, T>();
 
   for (const entry of entries) {
@@ -93,5 +95,25 @@ export async function getProjectPaths(lang: Lang = DEFAULT_LANG) {
   return projects.map((project) => ({
     params: { slug: baseSlug(project.id) },
     props: { project },
+  }));
+}
+
+export async function getHarness(lang: Lang = DEFAULT_LANG) {
+  if (!collectionHasContent('harness')) {
+    return [];
+  }
+
+  const entries = (await getCollection('harness')).filter((entry) => !entry.data.draft);
+  return pickLocalized(entries, lang).sort((a, b) => {
+    if (a.data.order !== b.data.order) return a.data.order - b.data.order;
+    return b.data.date.getTime() - a.data.date.getTime();
+  });
+}
+
+export async function getHarnessPaths(lang: Lang = DEFAULT_LANG) {
+  const entries = await getHarness(lang);
+  return entries.map((entry) => ({
+    params: { slug: baseSlug(entry.id) },
+    props: { entry },
   }));
 }

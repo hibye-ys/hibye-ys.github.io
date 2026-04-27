@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro';
+import { render } from 'astro:content';
+import type { HarnessEntry } from '../../lib/content';
+import { SITE, formatDate, localizedPath, type Lang } from '../../lib/site';
+
+export interface Props {
+  entry: HarnessEntry;
+  lang?: Lang;
+}
+
+const { entry, lang = 'ko' } = Astro.props;
+const { Content } = await render(entry);
+const { title, description, category, tags, date, links, cover } = entry.data;
+
+const labels = lang === 'ko'
+  ? { back: '← Harness 목록으로', github: 'GitHub', demo: 'Live demo', docs: 'Docs' }
+  : { back: '← Back to Harness', github: 'GitHub', demo: 'Live demo', docs: 'Docs' };
+---
+<Base title={`${title} · ${SITE.name}`} description={description} active="Harness" lang={lang}>
+  <section class="section" style="padding-top:48px">
+    <div class="container">
+      <div class="harness-detail-eyebrow">— HARNESS / {category.toUpperCase()}</div>
+      <h1 class="harness-detail-title">{title}</h1>
+      <p class="harness-detail-lede">{description}</p>
+
+      <div class="harness-detail-meta">
+        <span class="harness-detail-date">{formatDate(date, lang)}</span>
+        {tags.length > 0 && (
+          <div class="harness-detail-tags">
+            {tags.map((tag) => <span class="harness-chip">{tag}</span>)}
+          </div>
+        )}
+      </div>
+
+      {(links.github || links.demo || links.docs) && (
+        <div class="harness-detail-links">
+          {links.github && <a href={links.github} target="_blank" rel="noopener">{labels.github} ↗</a>}
+          {links.demo && <a href={links.demo} target="_blank" rel="noopener">{labels.demo} ↗</a>}
+          {links.docs && <a href={links.docs} target="_blank" rel="noopener">{labels.docs} ↗</a>}
+        </div>
+      )}
+
+      {cover && (
+        <div class="harness-detail-cover">
+          <img src={cover} alt="" />
+        </div>
+      )}
+
+      <div class="article harness-detail-body">
+        <div class="body" style="font-size:17px"><Content /></div>
+      </div>
+
+      <div class="harness-detail-back">
+        <a href={localizedPath('/harness', lang)}>{labels.back}</a>
+      </div>
+    </div>
+  </section>
+</Base>

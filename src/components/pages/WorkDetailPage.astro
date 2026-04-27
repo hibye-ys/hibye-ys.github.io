@@ -13,7 +13,7 @@ const { project, lang = 'ko' } = Astro.props;
 const { Content } = await render(project);
 const { links, stack } = project.data;
 ---
-<Base title={`${project.data.title} · ${SITE.name}`} description={project.data.description} active="Works" lang={lang}>
+<Base title={`${project.data.title} · ${SITE.name}`} description={project.data.description} active="Projects" lang={lang}>
   <section class="section" style="padding-top:48px">
     <div class="container">
       <div class="eyebrow" style="font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.12em;text-transform:uppercase">

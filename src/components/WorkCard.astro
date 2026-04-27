@@ -6,7 +6,7 @@ export interface Props {
   lang?: Lang;
 }
 const { project, lang = 'ko' } = Astro.props;
-const href = localizedPath(`/works/${baseSlug(project.id)}`, lang);
+const href = localizedPath(`/projects/${baseSlug(project.id)}`, lang);
 ---
 <a href={href} class="work-card">
   <div class="cover" style="background:var(--bg-2)">

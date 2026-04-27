@@ -8,9 +8,9 @@ export interface Props {
   title: string;
   description?: string;
   lang?: Lang;
-  active?: 'About' | 'Posts' | 'Works';
+  active?: 'About' | 'Posts' | 'Projects' | 'Harness';
 }
-const { title, description = SITE.description, lang = 'ko', active = 'About' } = Astro.props;
+const { title, description = SITE.description, lang = 'ko', active } = Astro.props;
 const displayTitle = title === SITE.name ? SITE.name : title;
 ---
 <!doctype html>

@@ -94,6 +94,26 @@ const videoNotes = defineCollection({
   }),
 });
 
+const harness = defineCollection({
+  loader: markdownLoader('harness'),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    category: z.string(),
+    tags: z.array(z.string()).default([]),
+    date: z.coerce.date(),
+    links: z.object({
+      github: z.string().url().optional(),
+      docs: z.string().url().optional(),
+      demo: z.string().url().optional(),
+    }).default({}),
+    cover: z.string().optional(),
+    order: z.number().default(0),
+    lang: z.enum(['ko', 'en']).default('ko'),
+    draft: z.boolean().default(false),
+  }),
+});
+
 const projects = defineCollection({
   loader: markdownLoader('projects'),
   schema: z.object({
@@ -120,4 +140,5 @@ export const collections = {
   scripts,
   'video-notes': videoNotes,
   projects,
+  harness,
 };

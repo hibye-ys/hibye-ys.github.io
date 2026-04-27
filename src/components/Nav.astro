@@ -2,13 +2,18 @@
 import { SITE, localizedPath, switchLocalePath, type Lang } from '../lib/site';
 
 export interface Props {
-  active?: 'About' | 'Posts' | 'Works';
+  active?: 'About' | 'Posts' | 'Projects' | 'Harness';
   lang?: Lang;
 }
 
-const { active = 'About', lang = 'ko' } = Astro.props;
-const items: Array<'About' | 'Posts' | 'Works'> = ['About', 'Posts', 'Works'];
-const pathFor = (item: string) => item === 'About' ? '/about' : item === 'Posts' ? '/posts' : '/works';
+const { active, lang = 'ko' } = Astro.props;
+const items: Array<'About' | 'Posts' | 'Projects' | 'Harness'> = ['About', 'Posts', 'Projects', 'Harness'];
+const pathFor = (item: string) => {
+  if (item === 'About') return '/about';
+  if (item === 'Posts') return '/posts';
+  if (item === 'Projects') return '/projects';
+  return '/harness';
+};
 const hrefFor = (item: string) => localizedPath(pathFor(item), lang);
 const homeHref = localizedPath('/', lang);
 const koHref = switchLocalePath(Astro.url.pathname, 'ko');

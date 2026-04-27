@@ -1,0 +1,11 @@
+---
+import HarnessDetailPage from '../../components/pages/HarnessDetailPage.astro';
+import { getHarnessPaths, type HarnessEntry } from '../../lib/content';
+
+export async function getStaticPaths() {
+  return getHarnessPaths('ko');
+}
+
+const { entry } = Astro.props as { entry: HarnessEntry };
+---
+<HarnessDetailPage entry={entry} lang="ko" />

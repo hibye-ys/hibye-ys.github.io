@@ -2,7 +2,8 @@
 import Base from '../../layouts/Base.astro';
 import PostRow from '../PostRow.astro';
 import WorkCard from '../WorkCard.astro';
-import { getPosts, getProjects } from '../../lib/content';
+import HarnessCard from '../HarnessCard.astro';
+import { getPosts, getProjects, getHarness } from '../../lib/content';
 import { SITE, localizedPath, type Lang } from '../../lib/site';
 
 export interface Props {
@@ -15,17 +16,13 @@ const posts = allPosts
   .filter((post) => ['thoughts', 'notes', 'video-notes'].includes(post.collection))
   .slice(0, 4);
 const projects = (await getProjects(lang)).slice(0, 4);
+const harness = (await getHarness(lang)).slice(0, 3);
 const isEnglish = lang === 'en';
 ---
-<Base title={SITE.name} active="About" lang={lang}>
+<Base title={SITE.name} lang={lang}>
   <section class="hero">
     <div class="container">
       <h1>{isEnglish ? 'Trying things' : '다양한 경험하기'}<br/><em>{isEnglish ? '& writing them down.' : '그리고 기록하기.'}</em></h1>
-      <p class="bio">
-        {isEnglish ? 'Hi, this is ' : '안녕하세요, '}
-        <b>{SITE.author}</b>{isEnglish ? '. This blog collects experiments, projects, and notes.' : '입니다. 프로젝트, 배운 것, 일상의 기록을 남깁니다.'}
-        {' '}<a href={localizedPath('/about', lang)}>{isEnglish ? 'Read more' : '더 읽기'} →</a>
-      </p>
       <div class="meta">
         <a href={SITE.githubUrl}>{SITE.githubLabel}</a>
         <span class="dot"></span>
@@ -53,9 +50,9 @@ const isEnglish = lang === 'en';
           <div class="section-head">
             <div>
               <div class="sub" style="margin-bottom:6px">PROJECTS · VIDEOS</div>
-              <h2>Works</h2>
+              <h2>Projects</h2>
             </div>
-            <a class="more" href={localizedPath('/works', lang)}>all works →</a>
+            <a class="more" href={localizedPath('/projects', lang)}>all projects →</a>
           </div>
           <div class="works-grid">
             {projects.map((project) => <WorkCard project={project} lang={lang} />)}
@@ -64,4 +61,21 @@ const isEnglish = lang === 'en';
       </div>
     </div>
   </section>
+
+  {harness.length > 0 && (
+    <section class="section last">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <div class="sub" style="margin-bottom:6px">SKILLS · AGENTS · MCP</div>
+            <h2>Harness</h2>
+          </div>
+          <a class="more" href={localizedPath('/harness', lang)}>all harness →</a>
+        </div>
+        <div class="harness-grid">
+          {harness.map((entry) => <HarnessCard entry={entry} lang={lang} />)}
+        </div>
+      </div>
+    </section>
+  )}
 </Base>
